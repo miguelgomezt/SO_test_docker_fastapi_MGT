@@ -94,3 +94,5 @@ def get_image(usuario: str, imagen: str):
     )
     
     return {"url": url, "fecha_creacion": result[1]}
+    from mangum import Mangum
+handler = Mangum(app)
