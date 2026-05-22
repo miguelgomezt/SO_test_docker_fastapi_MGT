@@ -13,5 +13,8 @@ RUN pip install -r requirements.txt
 # Expone el puerto 8000 (para que se pueda acceder desde el navegador)
 EXPOSE 8000
 
-# Comando que se ejecutará cuando se inicie el contenedor
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Comando para correr con uvicorn (EC2 / Docker local)
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Comando para Lambda con Mangum
+CMD ["main.handler"]
