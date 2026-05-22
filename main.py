@@ -5,6 +5,7 @@ import psycopg2
 import os
 from datetime import datetime
 import uuid
+from mangum import Mangum
 
 app = FastAPI()
 
@@ -42,12 +43,9 @@ def init_db():
     cur.close()
     conn.close()
 
-@app.on_event("startup")
-async def startup_event():
-    init_db()
-
 @app.get("/")
 def root():
+    init_db()
     return {"message": "Universidad EIA"}
 
 @app.post("/upload")
@@ -55,6 +53,7 @@ async def upload_image(usuario: str, file: UploadFile = File(...)):
     if file.content_type not in ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=415, detail="Formato no permitido. Use PNG o JPG/JPEG.")
     
+    init_db()
     s3_key = f"{usuario}/{file.filename}"
     s3_client = boto3.client("s3", region_name=AWS_REGION)
     s3_client.upload_fileobj(file.file, BUCKET_NAME, s3_key)
@@ -94,5 +93,5 @@ def get_image(usuario: str, imagen: str):
     )
     
     return {"url": url, "fecha_creacion": result[1]}
-    from mangum import Mangum
+
 handler = Mangum(app)
