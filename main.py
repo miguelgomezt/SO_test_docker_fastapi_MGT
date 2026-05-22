@@ -45,7 +45,6 @@ def init_db():
 
 @app.get("/")
 def root():
-    init_db()
     return {"message": "Universidad EIA"}
 
 @app.post("/upload")
